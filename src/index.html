@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Timer</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <main>
+            <section class="timer-display" aria-label="Timer display">
+                <svg
+                    class="arc"
+                    viewBox="0 0 200 200"
+                    role="img"
+                    aria-label="Timer progress arc"
+                >
+                    <defs>
+                        <clipPath id="progressClip">
+                            <path id="progressPath" d=""></path>
+                        </clipPath>
+                    </defs>
+                    <circle class="arc-bg" cx="100" cy="100" r="90"></circle>
+                    <path class="arc-progress" d=""></path>
+                    <text
+                        class="time-text-base"
+                        x="100"
+                        y="100"
+                        text-anchor="middle"
+                        dominant-baseline="middle"
+                        id="timeTextBase"
+                    >
+                        00:00
+                    </text>
+                    <text
+                        class="time-text-inverted"
+                        x="100"
+                        y="100"
+                        text-anchor="middle"
+                        dominant-baseline="middle"
+                        clip-path="url(#progressClip)"
+                        id="timeTextInverted"
+                    >
+                        00:00
+                    </text>
+                </svg>
+            </section>
+
+            <section class="phase-count" aria-label="Phase counter">
+                <span class="count-label">Phases:</span>
+                <span id="phaseCount">0</span>
+            </section>
+
+            <section class="controls" aria-label="Timer controls">
+                <button id="startStop" type="button">Start</button>
+                <button id="reset" type="button">Reset</button>
+                <button id="mute" type="button" aria-label="Toggle sound">
+                    🔊
+                </button>
+            </section>
+
+            <section class="settings" aria-label="Timer settings">
+                <fieldset>
+                    <legend class="sr-only">Interval durations</legend>
+                    <div class="setting">
+                        <label for="workTime">Work (s):</label>
+                        <input
+                            type="number"
+                            id="workTime"
+                            value="30"
+                            min="1"
+                            aria-label="Work duration in seconds"
+                        />
+                    </div>
+                    <div class="setting">
+                        <label for="restTime">Rest (s):</label>
+                        <input
+                            type="number"
+                            id="restTime"
+                            value="10"
+                            min="1"
+                            aria-label="Rest duration in seconds"
+                        />
+                    </div>
+                </fieldset>
+            </section>
+        </main>
+
+        <script type="module" src="app.js"></script>
+    </body>
+</html>
