@@ -77,3 +77,37 @@ export function isPhaseComplete(elapsed) {
 export function toggleMute() {
   state.isMuted = !state.isMuted;
 }
+
+/**
+ * Run countdown before starting timer
+ * @param {Function} onTick - Callback for each countdown tick (3, 2, 1)
+ * @returns {Promise<boolean>} Resolves to true when countdown completes, false if cancelled
+ */
+export async function countdown(onTick) {
+  state.isCountingDown = true;
+
+  for (let i = 3; i >= 1; i--) {
+    // Check if countdown was cancelled
+    if (!state.isCountingDown) {
+      return false;
+    }
+
+    // Call tick callback with current count
+    if (onTick) {
+      onTick(i);
+    }
+
+    // Wait 1 second
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
+
+  state.isCountingDown = false;
+  return true;
+}
+
+/**
+ * Cancel ongoing countdown
+ */
+export function cancelCountdown() {
+  state.isCountingDown = false;
+}

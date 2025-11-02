@@ -56,3 +56,21 @@ export function playBeep(frequency = 800) {
   oscillator.start(state.audioContext.currentTime);
   oscillator.stop(state.audioContext.currentTime + 0.2);
 }
+
+/**
+ * Play countdown beep with escalating frequency
+ * Higher count = lower frequency for anticipation buildup
+ *
+ * @param {number} count - Countdown number (3, 2, 1)
+ */
+export function playCountdownBeep(count) {
+  // Escalating frequencies: 3=600Hz, 2=700Hz, 1=850Hz
+  const frequencies = {
+    3: 600,
+    2: 700,
+    1: 850,
+  };
+
+  const frequency = frequencies[count] || 800;
+  playBeep(frequency);
+}

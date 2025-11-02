@@ -35,18 +35,21 @@ body {
 main {
     text-align: center;
     padding: 2rem;
+    max-width: 65ch;
+    position: relative;
 }
 
 .timer-display {
     position: relative;
-    width: 300px;
-    height: 300px;
-    margin: 0 auto 2rem;
+    inline-size: 300px;
+    block-size: 300px;
+    margin-inline: auto;
+    margin-block-end: 2rem;
 }
 
 .arc {
-    width: 100%;
-    height: 100%;
+    inline-size: 100%;
+    block-size: 100%;
 }
 
 .arc-bg {
@@ -85,7 +88,7 @@ main {
     gap: 0.5rem;
     justify-content: center;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-block-end: 1rem;
     font-size: 1.125rem;
 }
 
@@ -98,7 +101,7 @@ main {
     color: var(--color-text);
     font-weight: 700;
     font-variant-numeric: tabular-nums;
-    min-width: 2ch;
+    min-inline-size: 2ch;
     text-align: center;
 }
 
@@ -106,11 +109,20 @@ main {
     display: flex;
     gap: 1rem;
     justify-content: center;
-    margin-bottom: 2rem;
+    margin-block-end: 2rem;
+}
+
+.secondary-controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-block: 2rem;
+    width: 100%;
 }
 
 button {
-    padding: 0.75rem 2rem;
+    padding-block: 0.75rem;
+    padding-inline: 2rem;
     font-size: 1rem;
     font-weight: 600;
     border: none;
@@ -139,7 +151,8 @@ button:active {
 
 #mute {
     background: var(--color-btn-secondary);
-    padding: 0.75rem 1rem;
+    padding-block: 0.75rem;
+    padding-inline: 1rem;
     font-size: 1.25rem;
     line-height: 1;
 }
@@ -152,6 +165,33 @@ button:active {
     opacity: 0.5;
 }
 
+#fullscreen {
+    background: var(--color-btn-secondary);
+    padding-block: 0.75rem;
+    padding-inline: 1rem;
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+#fullscreen:hover {
+    background: var(--color-btn-secondary-hover);
+}
+
+/* Fullscreen mode styles */
+:fullscreen main,
+::backdrop {
+    background: var(--color-bg);
+}
+
+:fullscreen .settings {
+    opacity: 0.3;
+    transition: opacity 0.3s;
+}
+
+:fullscreen .settings:hover {
+    opacity: 1;
+}
+
 .settings fieldset {
     border: none;
     display: flex;
@@ -161,8 +201,8 @@ button:active {
 
 .sr-only {
     position: absolute;
-    width: 1px;
-    height: 1px;
+    inline-size: 1px;
+    block-size: 1px;
     padding: 0;
     margin: -1px;
     overflow: hidden;
@@ -183,7 +223,7 @@ label {
 }
 
 input[type="number"] {
-    width: 4.375rem;
+    inline-size: 4.375rem;
     padding: 0.5rem;
     font-size: 1rem;
     border: 2px solid var(--color-input-border);

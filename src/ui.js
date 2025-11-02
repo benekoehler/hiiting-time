@@ -13,6 +13,7 @@ export const elements = {
   startStopBtn: document.getElementById("startStop"),
   resetBtn: document.getElementById("reset"),
   muteBtn: document.getElementById("mute"),
+  fullscreenBtn: document.getElementById("fullscreen"),
   workTimeInput: document.getElementById("workTime"),
   restTimeInput: document.getElementById("restTime"),
   phaseCountDisplay: document.getElementById("phaseCount"),
@@ -126,4 +127,45 @@ export function setStartStopButton(isRunning) {
 export function setMuteButton(isMuted) {
   elements.muteBtn.textContent = isMuted ? "🔇" : "🔊";
   elements.muteBtn.classList.toggle("muted", isMuted);
+}
+
+/**
+ * Toggle fullscreen mode
+ * Uses the Fullscreen API to enter/exit fullscreen
+ */
+export async function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    try {
+      await document.documentElement.requestFullscreen();
+    } catch (err) {
+      console.error("Error entering fullscreen:", err);
+    }
+  } else {
+    try {
+      await document.exitFullscreen();
+    } catch (err) {
+      console.error("Error exiting fullscreen:", err);
+    }
+  }
+}
+
+/**
+ * Update fullscreen button icon based on fullscreen state
+ */
+export function updateFullscreenButton() {
+  const isFullscreen = !!document.fullscreenElement;
+  elements.fullscreenBtn.textContent = isFullscreen ? "⛶" : "⛶";
+  elements.fullscreenBtn.setAttribute(
+    "aria-label",
+    isFullscreen ? "Exit fullscreen" : "Enter fullscreen",
+  );
+}
+
+/**
+ * Display countdown number
+ * @param {number} count - Countdown number (3, 2, 1)
+ */
+export function showCountdown(count) {
+  elements.timeTextBase.textContent = count.toString();
+  elements.timeTextInverted.textContent = count.toString();
 }

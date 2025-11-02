@@ -8,6 +8,7 @@ import { state } from "./state.js";
 import * as timer from "./timer.js";
 import * as audio from "./audio.js";
 import * as ui from "./ui.js";
+import * as vibration from "./vibration.js";
 
 /**
  * Main animation loop using requestAnimationFrame
@@ -35,23 +36,48 @@ function animate() {
 
 /**
  * Handle phase switching (work ↔ rest)
- * Updates state, UI, and plays sound
+ * Updates state, UI, plays sound, and triggers vibration
  */
 function handlePhaseSwitch() {
   timer.switchPhase();
   ui.setPhaseColor(state.isWorkPhase);
   ui.updatePhaseCount(state.phaseCount);
   audio.playBeep();
+  vibration.vibratePhaseChange();
 }
 
 /**
  * Toggle between running and paused states
+ * Includes countdown when starting from beginning (pausedTime === 0)
  */
-function handleToggleTimer() {
+async function handleToggleTimer() {
   if (state.isRunning) {
+    // Pause
     timer.pause();
     ui.setStartStopButton(false);
   } else {
+    // Check if starting from beginning (not resuming)
+    const isStartingFresh = state.pausedTime === 0;
+
+    if (isStartingFresh) {
+      // Run countdown before starting
+      ui.setStartStopButton(true); // Show "Pause" during countdown
+
+      const completed = await timer.countdown((count) => {
+        // On each countdown tick
+        ui.showCountdown(count);
+        audio.playCountdownBeep(count);
+        vibration.vibrateCountdown(count);
+      });
+
+      // If countdown was cancelled, reset button
+      if (!completed) {
+        ui.setStartStopButton(false);
+        return;
+      }
+    }
+
+    // Start timer
     timer.start();
     ui.setStartStopButton(true);
     animate();
@@ -98,14 +124,27 @@ function handleRestTimeChange(e) {
 }
 
 /**
+ * Handle fullscreen toggle
+ */
+async function handleToggleFullscreen() {
+  await ui.toggleFullscreen();
+}
+
+/**
  * Initialize event listeners
  */
 function initEventListeners() {
   ui.elements.startStopBtn.addEventListener("click", handleToggleTimer);
   ui.elements.resetBtn.addEventListener("click", handleReset);
   ui.elements.muteBtn.addEventListener("click", handleToggleMute);
+  ui.elements.fullscreenBtn.addEventListener("click", handleToggleFullscreen);
   ui.elements.workTimeInput.addEventListener("change", handleWorkTimeChange);
   ui.elements.restTimeInput.addEventListener("change", handleRestTimeChange);
+
+  // Listen for fullscreen changes (e.g., ESC key)
+  document.addEventListener("fullscreenchange", () => {
+    ui.updateFullscreenButton();
+  });
 }
 
 /**

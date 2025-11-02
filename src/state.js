@@ -11,6 +11,7 @@
  * @property {number} phaseCount - Number of completed phases
  * @property {number|null} animationFrameId - requestAnimationFrame ID for smooth animation
  * @property {AudioContext|null} audioContext - Web Audio API context
+ * @property {boolean} isCountingDown - Whether in countdown mode
  */
 
 /**
@@ -29,4 +30,5 @@ export const state = {
   phaseCount: 0,
   animationFrameId: null,
   audioContext: null,
+  isCountingDown: false,
 };

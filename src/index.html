@@ -8,6 +8,19 @@
     </head>
     <body>
         <main>
+            <section class="secondary-controls">
+                <button id="mute" type="button" aria-label="Toggle sound">
+                    🔊
+                </button>
+                <button
+                    id="fullscreen"
+                    type="button"
+                    aria-label="Toggle fullscreen"
+                >
+                    ⛶
+                </button>
+            </section>
+
             <section class="timer-display" aria-label="Timer display">
                 <svg
                     class="arc"
@@ -16,16 +29,16 @@
                     aria-label="Timer progress arc"
                 >
                     <defs>
-                        <clipPath id="progressClip">
-                            <path id="progressPath" d=""></path>
-                        </clipPath>
+                        <mask id="progressMask">
+                            <path id="progressPath" d="" fill="white"></path>
+                        </mask>
                     </defs>
                     <circle class="arc-bg" cx="100" cy="100" r="90"></circle>
                     <path class="arc-progress" d=""></path>
                     <text
                         class="time-text-base"
                         x="100"
-                        y="100"
+                        y="105"
                         text-anchor="middle"
                         dominant-baseline="middle"
                         id="timeTextBase"
@@ -35,10 +48,10 @@
                     <text
                         class="time-text-inverted"
                         x="100"
-                        y="100"
+                        y="105"
                         text-anchor="middle"
                         dominant-baseline="middle"
-                        clip-path="url(#progressClip)"
+                        mask="url(#progressMask)"
                         id="timeTextInverted"
                     >
                         00:00
@@ -54,9 +67,6 @@
             <section class="controls" aria-label="Timer controls">
                 <button id="startStop" type="button">Start</button>
                 <button id="reset" type="button">Reset</button>
-                <button id="mute" type="button" aria-label="Toggle sound">
-                    🔊
-                </button>
             </section>
 
             <section class="settings" aria-label="Timer settings">
@@ -69,6 +79,7 @@
                             id="workTime"
                             value="30"
                             min="1"
+                            inputmode="numeric"
                             aria-label="Work duration in seconds"
                         />
                     </div>
@@ -79,6 +90,7 @@
                             id="restTime"
                             value="10"
                             min="1"
+                            inputmode="numeric"
                             aria-label="Rest duration in seconds"
                         />
                     </div>
