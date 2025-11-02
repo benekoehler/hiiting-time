@@ -4,35 +4,11 @@
  * Main orchestrator that coordinates timer state, logic, audio, and UI
  */
 
-import { state } from "./state.js";
+import { state, TimerStatus } from "./state.js";
 import * as timer from "./timer.js";
 import * as audio from "./audio.js";
 import * as ui from "./ui.js";
 import * as vibration from "./vibration.js";
-
-/**
- * Main animation loop using requestAnimationFrame
- *
- * Runs at ~60fps for smooth visual updates. Calculates elapsed time,
- * checks for phase completion, updates display, and schedules next frame.
- */
-function animate() {
-  if (!state.isRunning) return;
-
-  // Calculate time elapsed in current phase
-  const elapsed = timer.getElapsed();
-  state.pausedTime = elapsed; // Store for resume functionality
-
-  // Check if phase is complete
-  if (timer.isPhaseComplete(elapsed)) {
-    handlePhaseSwitch();
-  }
-
-  ui.updateDisplay(elapsed, state.totalTime);
-
-  // Schedule next frame (typically ~60fps)
-  state.animationFrameId = requestAnimationFrame(animate);
-}
 
 /**
  * Handle phase switching (work ↔ rest)
@@ -51,18 +27,23 @@ function handlePhaseSwitch() {
  * Includes countdown when starting from beginning (pausedTime === 0)
  */
 async function handleToggleTimer() {
-  if (state.isRunning) {
-    // Pause
+  if (state.status === TimerStatus.RUNNING) {
+    // Pause the running timer
     timer.pause();
+    state.pausedTime = timer.getElapsed();
     ui.setStartStopButton(false);
+    ui.setTimerRunning(false);
+  } else if (state.status === TimerStatus.COUNTDOWN) {
+    // Cancel countdown if user clicks during countdown
+    timer.cancelCountdown();
+    ui.setStartStopButton(false);
+    ui.updateDisplay(0, state.totalTime);
   } else {
-    // Check if starting from beginning (not resuming)
+    // Starting or resuming
     const isStartingFresh = state.pausedTime === 0;
 
     if (isStartingFresh) {
       // Run countdown before starting
-      ui.setStartStopButton(true); // Show "Pause" during countdown
-
       const completed = await timer.countdown((count) => {
         // On each countdown tick
         ui.showCountdown(count);
@@ -70,17 +51,19 @@ async function handleToggleTimer() {
         vibration.vibrateCountdown(count);
       });
 
-      // If countdown was cancelled, reset button
+      // If countdown was cancelled, don't start
       if (!completed) {
         ui.setStartStopButton(false);
+        ui.updateDisplay(0, state.totalTime);
         return;
       }
     }
 
-    // Start timer
+    // Start or resume timer
     timer.start();
     ui.setStartStopButton(true);
-    animate();
+    ui.setTimerRunning(true);
+    timer.startAnimationLoop(ui.updateDisplay, handlePhaseSwitch);
   }
 }
 
@@ -92,6 +75,7 @@ function handleReset() {
   ui.setPhaseColor(state.isWorkPhase);
   ui.updatePhaseCount(state.phaseCount);
   ui.setStartStopButton(false);
+  ui.setTimerRunning(false);
   ui.updateDisplay(0, state.totalTime);
 }
 
@@ -107,9 +91,21 @@ function handleToggleMute() {
  * Handle work time input change
  */
 function handleWorkTimeChange(e) {
-  state.workTime = parseInt(e.target.value);
-  if (!state.isRunning) {
-    handleReset();
+  const value = parseInt(e.target.value, 10);
+
+  // Validate input - reject NaN and negative values
+  if (isNaN(value) || value <= 0) {
+    // Reset input to current valid value
+    e.target.value = Math.floor(state.workTime / 1000);
+    return;
+  }
+
+  state.workTime = value * 1000; // Convert seconds to milliseconds
+
+  // Only update if in idle state and is work phase
+  if (state.status === TimerStatus.IDLE && state.isWorkPhase) {
+    state.totalTime = state.workTime;
+    ui.updateDisplay(0, state.totalTime);
   }
 }
 
@@ -117,9 +113,21 @@ function handleWorkTimeChange(e) {
  * Handle rest time input change
  */
 function handleRestTimeChange(e) {
-  state.restTime = parseInt(e.target.value);
-  if (!state.isRunning) {
-    handleReset();
+  const value = parseInt(e.target.value, 10);
+
+  // Validate input - reject NaN and negative values
+  if (isNaN(value) || value <= 0) {
+    // Reset input to current valid value
+    e.target.value = Math.floor(state.restTime / 1000);
+    return;
+  }
+
+  state.restTime = value * 1000; // Convert seconds to milliseconds
+
+  // Only update if in idle state and is rest phase
+  if (state.status === TimerStatus.IDLE && !state.isWorkPhase) {
+    state.totalTime = state.restTime;
+    ui.updateDisplay(0, state.totalTime);
   }
 }
 

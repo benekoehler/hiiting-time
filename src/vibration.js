@@ -4,6 +4,7 @@
  */
 
 import { state } from "./state.js";
+import { COUNTDOWN_CONFIG } from "./config.js";
 
 /**
  * Check if vibration is supported
@@ -33,7 +34,8 @@ export function vibrate(pattern) {
  * Single 200ms pulse
  */
 export function vibratePhaseChange() {
-  vibrate(200);
+  if (state.isMuted || !isVibrationSupported()) return;
+  navigator.vibrate(200);
 }
 
 /**
@@ -43,15 +45,10 @@ export function vibratePhaseChange() {
  * @param {number} count - Countdown number (3, 2, 1)
  */
 export function vibrateCountdown(count) {
-  // Escalating patterns: 3=short, 2=medium, 1=long
-  const patterns = {
-    3: 100, // Short pulse
-    2: 150, // Medium pulse
-    1: 300, // Longer pulse for final count
-  };
-
-  const pattern = patterns[count] || 100;
-  vibrate(pattern);
+  if (state.isMuted || !isVibrationSupported()) return;
+  const config = COUNTDOWN_CONFIG[count];
+  const duration = config ? config.vibrationDuration : 100;
+  navigator.vibrate(duration);
 }
 
 /**

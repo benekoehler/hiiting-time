@@ -6,6 +6,7 @@
  * DOM element references
  */
 export const elements = {
+  appContainer: document.getElementById("appContainer"),
   arcProgress: document.querySelector(".arc-progress"),
   arcBg: document.querySelector(".arc-bg"),
   progressPath: document.getElementById("progressPath"),
@@ -40,18 +41,19 @@ export function createArcPath(progress) {
   const cx = 100; // Center X in viewBox coordinates
   const cy = 100; // Center Y in viewBox coordinates
   const r = 90; // Radius
-  const angle = progress * 2 * Math.PI; // Convert progress to radians
 
   // Empty path for 0% progress
   if (progress === 0) return "";
 
-  // Full circle for 100% progress (two half-circle arcs)
-  if (progress >= 1) {
-    return `M ${cx},${cy} m -${r},0 a ${r},${r} 0 1,0 ${r * 2},0 a ${r},${r} 0 1,0 -${r * 2},0`;
+  // Full circle for 100% progress - use simpler path
+  if (progress >= 0.9999) {
+    const startY = cy - r;
+    return `M ${cx},${cy} L ${cx},${startY} A ${r},${r} 0 1,1 ${cx},${startY + 0.01} Z`;
   }
 
   // Calculate end point on circle (starting from top, going clockwise)
   // Subtract π/2 to start from top instead of right
+  const angle = progress * 2 * Math.PI;
   const x = cx + r * Math.cos(angle - Math.PI / 2);
   const y = cy + r * Math.sin(angle - Math.PI / 2);
 
@@ -72,20 +74,24 @@ export function createArcPath(progress) {
  * @param {number} totalTime - Total time for current phase in milliseconds
  */
 export function updateDisplay(elapsed, totalTime) {
-  // Calculate remaining time in seconds (rounded up)
-  const remaining = Math.ceil((totalTime - elapsed) / 1000);
+  // Prevent negative time and handle division by zero
+  const safeElapsed = Math.max(0, Math.min(elapsed, totalTime));
+  const safeTotalTime = totalTime > 0 ? totalTime : 1;
+
+  // Calculate remaining time in seconds (rounded up, min 0)
+  const remaining = Math.max(0, Math.ceil((safeTotalTime - safeElapsed) / 1000));
   const minutes = Math.floor(remaining / 60);
   const seconds = remaining % 60;
 
   // Format as MM:SS with zero-padding
   const timeString = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 
-  // Update both text layers
+  // Update text (single update)
   elements.timeText.textContent = timeString;
   elements.timeTextInverted.textContent = timeString;
 
-  // Calculate progress ratio (0 to 1) and generate arc path
-  const progress = Math.min(elapsed / totalTime, 1);
+  // Calculate progress ratio (0 to 1) with bounds checking
+  const progress = Math.min(Math.max(0, safeElapsed / safeTotalTime), 1);
   const pathData = createArcPath(progress);
 
   // Update both the visible arc and the clip path
@@ -106,19 +112,16 @@ export function updatePhaseCount(count) {
  * @param {boolean} isWorkPhase - Whether in work phase
  */
 export function setPhaseColor(isWorkPhase) {
-  if (isWorkPhase) {
-    elements.arcProgress.classList.remove("rest");
-    elements.arcBg.classList.remove("rest");
-    elements.timeText.classList.remove("rest");
-    elements.timeTextInverted.classList.remove("rest");
-    elements.phaseTextDisplay.textContent = "Work";
-  } else {
-    elements.arcProgress.classList.add("rest");
-    elements.arcBg.classList.add("rest");
-    elements.timeText.classList.add("rest");
-    elements.timeTextInverted.classList.add("rest");
-    elements.phaseTextDisplay.textContent = "Rest";
-  }
+  elements.appContainer.classList.toggle("rest", !isWorkPhase);
+  elements.phaseTextDisplay.textContent = isWorkPhase ? "Work" : "Rest";
+}
+
+/**
+ * Set timer running state for UI (shows/hides inverted text layer)
+ * @param {boolean} isRunning - Whether timer is actively running
+ */
+export function setTimerRunning(isRunning) {
+  elements.appContainer.classList.toggle("timer-running", isRunning);
 }
 
 /**
@@ -162,7 +165,6 @@ export async function toggleFullscreen() {
  */
 export function updateFullscreenButton() {
   const isFullscreen = !!document.fullscreenElement;
-  elements.fullscreenBtn.textContent = isFullscreen ? "⛶" : "⛶";
   elements.fullscreenBtn.setAttribute(
     "aria-label",
     isFullscreen ? "Exit fullscreen" : "Enter fullscreen",

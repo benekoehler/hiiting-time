@@ -66,7 +66,7 @@ main {
     fill: var(--color-arc-bg);
 }
 
-.arc-bg.rest {
+main.rest .arc-bg {
     fill: var(--color-work);
 }
 
@@ -74,10 +74,11 @@ main {
     fill: var(--color-work);
 }
 
-.arc-progress.rest {
+main.rest .arc-progress {
     fill: var(--color-rest);
 }
 
+/* Use SVG filter for inversion - better Safari support */
 .time-text {
     fill: var(--color-text);
     font-size: 3rem;
@@ -86,8 +87,8 @@ main {
     font-variant-numeric: tabular-nums;
 }
 
-.time-text.rest {
-    filter: invert(1);
+main.rest .time-text {
+    filter: url(#invertFilter);
 }
 
 .time-text-inverted {
@@ -96,10 +97,20 @@ main {
     font-weight: 700;
     font-family: "Courier New", monospace;
     font-variant-numeric: tabular-nums;
-    filter: invert(1);
+    display: none; /* Hidden by default to avoid Safari filter issues during countdown */
 }
 
-.time-text-inverted.rest {
+/* Show inverted text only when timer is actually running */
+main.timer-running .time-text-inverted {
+    display: block;
+}
+
+/* Apply filter to inverted text only in work phase */
+main.timer-running:not(.rest) .time-text-inverted {
+    filter: url(#invertFilter);
+}
+
+main.timer-running.rest .time-text-inverted {
     filter: none;
 }
 

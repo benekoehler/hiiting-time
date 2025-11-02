@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="style.css" />
     </head>
     <body>
-        <main>
+        <main id="appContainer">
             <section class="secondary-controls">
                 <button id="mute" type="button" aria-label="Toggle sound">
                     M
@@ -37,6 +37,12 @@
                         <clipPath id="progressClip">
                             <path id="progressPath" d=""></path>
                         </clipPath>
+                        <filter id="invertFilter">
+                            <feColorMatrix type="matrix" values="-1 0 0 0 1
+                                                                   0 -1 0 0 1
+                                                                   0 0 -1 0 1
+                                                                   0 0 0 1 0"/>
+                        </filter>
                     </defs>
                     <circle
                         class="arc-bg"

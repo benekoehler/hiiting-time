@@ -3,14 +3,14 @@
  * No DOM manipulation or side effects
  */
 
-import { state } from "./state.js";
+import { state, TimerStatus } from "./state.js";
 
 /**
  * Start the timer
  * Sets running state and calculates start time for resume functionality
  */
 export function start() {
-  state.isRunning = true;
+  state.status = TimerStatus.RUNNING;
   state.startTime = performance.now() - state.pausedTime;
 }
 
@@ -19,7 +19,7 @@ export function start() {
  * Cancels animation frame and preserves elapsed time
  */
 export function pause() {
-  state.isRunning = false;
+  state.status = TimerStatus.PAUSED;
 
   if (state.animationFrameId !== null) {
     cancelAnimationFrame(state.animationFrameId);
@@ -31,10 +31,21 @@ export function pause() {
  * Reset timer to initial work phase state
  */
 export function reset() {
-  pause();
+  // Cancel any ongoing countdown
+  if (state.countdownTimeoutId !== null) {
+    clearTimeout(state.countdownTimeoutId);
+    state.countdownTimeoutId = null;
+  }
+
+  if (state.animationFrameId !== null) {
+    cancelAnimationFrame(state.animationFrameId);
+    state.animationFrameId = null;
+  }
+
+  state.status = TimerStatus.IDLE;
   state.isWorkPhase = true;
   state.pausedTime = 0;
-  state.totalTime = state.workTime * 1000;
+  state.totalTime = state.workTime;
   state.phaseCount = 0;
 }
 
@@ -46,10 +57,10 @@ export function switchPhase() {
   state.isWorkPhase = !state.isWorkPhase;
   state.pausedTime = 0;
   state.startTime = performance.now();
-  state.totalTime = (state.isWorkPhase ? state.workTime : state.restTime) * 1000;
+  state.totalTime = state.isWorkPhase ? state.workTime : state.restTime;
 
-  // Only increment phase count when starting a new work phase
-  if (state.isWorkPhase) {
+  // Increment phase count when ENDING a work phase (starting rest)
+  if (!state.isWorkPhase) {
     state.phaseCount++;
   }
 }
@@ -84,11 +95,11 @@ export function toggleMute() {
  * @returns {Promise<boolean>} Resolves to true when countdown completes, false if cancelled
  */
 export async function countdown(onTick) {
-  state.isCountingDown = true;
+  state.status = TimerStatus.COUNTDOWN;
 
   for (let i = 3; i >= 1; i--) {
     // Check if countdown was cancelled
-    if (!state.isCountingDown) {
+    if (state.status !== TimerStatus.COUNTDOWN) {
       return false;
     }
 
@@ -98,10 +109,12 @@ export async function countdown(onTick) {
     }
 
     // Wait 1 second
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => {
+      state.countdownTimeoutId = setTimeout(resolve, 1000);
+    });
   }
 
-  state.isCountingDown = false;
+  state.countdownTimeoutId = null;
   return true;
 }
 
@@ -109,5 +122,41 @@ export async function countdown(onTick) {
  * Cancel ongoing countdown
  */
 export function cancelCountdown() {
-  state.isCountingDown = false;
+  if (state.countdownTimeoutId !== null) {
+    clearTimeout(state.countdownTimeoutId);
+    state.countdownTimeoutId = null;
+  }
+  if (state.status === TimerStatus.COUNTDOWN) {
+    state.status = TimerStatus.IDLE;
+  }
+}
+
+/**
+ * Start animation loop with callbacks
+ * @param {Function} onUpdate - Called each frame with (elapsed, totalTime)
+ * @param {Function} onPhaseComplete - Called when phase completes
+ */
+export function startAnimationLoop(onUpdate, onPhaseComplete) {
+  function animate() {
+    if (state.status !== TimerStatus.RUNNING) return;
+
+    const elapsed = getElapsed();
+
+    // Check if phase is complete
+    if (isPhaseComplete(elapsed)) {
+      state.pausedTime = elapsed;
+      if (onPhaseComplete) {
+        onPhaseComplete();
+      }
+    }
+
+    if (onUpdate) {
+      onUpdate(elapsed, state.totalTime);
+    }
+
+    // Schedule next frame
+    state.animationFrameId = requestAnimationFrame(animate);
+  }
+
+  animate();
 }

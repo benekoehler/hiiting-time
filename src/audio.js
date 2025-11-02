@@ -3,6 +3,7 @@
  */
 
 import { state } from "./state.js";
+import { COUNTDOWN_CONFIG } from "./config.js";
 
 /**
  * Play a simple beep sound using Web Audio API
@@ -64,13 +65,7 @@ export function playBeep(frequency = 800) {
  * @param {number} count - Countdown number (3, 2, 1)
  */
 export function playCountdownBeep(count) {
-  // Escalating frequencies: 3=600Hz, 2=700Hz, 1=850Hz
-  const frequencies = {
-    3: 600,
-    2: 700,
-    1: 850,
-  };
-
-  const frequency = frequencies[count] || 800;
+  const config = COUNTDOWN_CONFIG[count];
+  const frequency = config ? config.audioFrequency : 800;
   playBeep(frequency);
 }
