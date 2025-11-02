@@ -41,7 +41,7 @@ main {
 }
 
 .phase-indicator {
-    font-size: 1.5rem;
+    font-size: 1rem;
     font-weight: 700;
     text-transform: uppercase;
     margin-block-end: 1rem;
@@ -119,8 +119,9 @@ main.timer-running.rest .time-text-inverted {
     gap: 0.5rem;
     justify-content: center;
     align-items: center;
+    margin-block-start: -1.5rem;
     margin-block-end: 1rem;
-    font-size: 1.125rem;
+    font-size: 1rem;
     padding: 1rem;
     inline-size: fit-content;
     margin-inline: auto;
@@ -188,7 +189,7 @@ button:hover {
     color: var(--color-text);
     padding-block: 0.75rem;
     padding-inline: 1rem;
-    font-size: 1.25rem;
+    font-size: 1rem;
     line-height: 1;
 }
 
@@ -207,7 +208,7 @@ button:hover {
     color: var(--color-text);
     padding-block: 0.75rem;
     padding-inline: 1rem;
-    font-size: 1.25rem;
+    font-size: 1rem;
     line-height: 1;
 }
 
@@ -239,13 +240,13 @@ button:hover {
     display: flex;
     gap: 2rem;
     justify-content: center;
-    padding: 1.5rem 2rem 1rem 2rem;
+    padding: 0.8rem 2rem 1rem 2rem;
     margin-inline: auto;
     width: fit-content;
 }
 
 .settings fieldset legend {
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--color-text);
     text-transform: uppercase;
@@ -259,7 +260,7 @@ button:hover {
 }
 
 label {
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--color-text-muted);
     text-transform: uppercase;
