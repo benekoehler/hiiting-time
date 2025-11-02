@@ -1,18 +1,20 @@
 :root {
-    --color-bg: #1a1a1a;
-    --color-text: #fff;
-    --color-text-muted: #9ca3af;
-    --color-arc-bg: #333;
-    --color-work: #22c55e;
-    --color-rest: #ef4444;
-    --color-text-inverted: #1a1a1a;
-    --color-btn-primary: #3b82f6;
-    --color-btn-primary-hover: #2563eb;
-    --color-btn-secondary: #6b7280;
-    --color-btn-secondary-hover: #4b5563;
-    --color-input-bg: #2a2a2a;
-    --color-input-border: #333;
-    --color-input-border-focus: #3b82f6;
+    --color-bg: #ffffff;
+    --color-text: #000000;
+    --color-text-muted: #000000;
+    --color-arc-bg: #ffffff;
+    --color-work: #000000;
+    --color-rest: #ffffff;
+    --color-text-inverted: #ffffff;
+    --color-btn-primary: #000000;
+    --color-btn-primary-hover: #000000;
+    --color-btn-secondary: #ffffff;
+    --color-btn-secondary-hover: #ffffff;
+    --color-input-bg: #ffffff;
+    --color-input-border: #000000;
+    --color-input-border-focus: #000000;
+    --border-width: 4px;
+    --border-width-active: 6px;
 }
 
 * {
@@ -22,8 +24,7 @@
 }
 
 body {
-    font-family:
-        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: "Courier New", monospace;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -39,12 +40,21 @@ main {
     position: relative;
 }
 
+.phase-indicator {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-block-end: 1rem;
+    color: var(--color-text);
+}
+
 .timer-display {
     position: relative;
     inline-size: 300px;
     block-size: 300px;
     margin-inline: auto;
     margin-block-end: 2rem;
+    /*border: var(--border-width) solid var(--color-text);*/
 }
 
 .arc {
@@ -56,31 +66,41 @@ main {
     fill: var(--color-arc-bg);
 }
 
+.arc-bg.rest {
+    fill: var(--color-work);
+}
+
 .arc-progress {
     fill: var(--color-work);
-    transition: fill 0.3s ease;
 }
 
 .arc-progress.rest {
     fill: var(--color-rest);
 }
 
-.time-text-base {
+.time-text {
     fill: var(--color-text);
     font-size: 3rem;
     font-weight: 700;
-    font-family:
-        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: "Courier New", monospace;
     font-variant-numeric: tabular-nums;
 }
 
+.time-text.rest {
+    filter: invert(1);
+}
+
 .time-text-inverted {
-    fill: var(--color-text-inverted);
+    fill: var(--color-text);
     font-size: 3rem;
     font-weight: 700;
-    font-family:
-        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: "Courier New", monospace;
     font-variant-numeric: tabular-nums;
+    filter: invert(1);
+}
+
+.time-text-inverted.rest {
+    filter: none;
 }
 
 .phase-count {
@@ -90,11 +110,15 @@ main {
     align-items: center;
     margin-block-end: 1rem;
     font-size: 1.125rem;
+    padding: 1rem;
+    inline-size: fit-content;
+    margin-inline: auto;
 }
 
 .count-label {
     color: var(--color-text-muted);
-    font-weight: 500;
+    font-weight: 700;
+    text-transform: uppercase;
 }
 
 #phaseCount {
@@ -124,33 +148,33 @@ button {
     padding-block: 0.75rem;
     padding-inline: 2rem;
     font-size: 1rem;
-    font-weight: 600;
-    border: none;
-    border-radius: 0.5rem;
+    font-weight: 700;
+    font-family: "Courier New", monospace;
+    border: var(--border-width) solid var(--color-text);
     background: var(--color-btn-primary);
-    color: var(--color-text);
+    color: var(--color-text-inverted);
     cursor: pointer;
-    transition: background 0.2s;
+    text-transform: uppercase;
 }
 
 button:hover {
-    background: var(--color-btn-primary-hover);
-}
-
-button:active {
-    transform: scale(0.98);
+    background: var(--color-btn-secondary);
+    color: var(--color-text);
 }
 
 #reset {
     background: var(--color-btn-secondary);
+    color: var(--color-text);
 }
 
 #reset:hover {
-    background: var(--color-btn-secondary-hover);
+    background: var(--color-btn-primary);
+    color: var(--color-text-inverted);
 }
 
 #mute {
     background: var(--color-btn-secondary);
+    color: var(--color-text);
     padding-block: 0.75rem;
     padding-inline: 1rem;
     font-size: 1.25rem;
@@ -158,15 +182,18 @@ button:active {
 }
 
 #mute:hover {
-    background: var(--color-btn-secondary-hover);
+    background: var(--color-btn-primary);
+    color: var(--color-text-inverted);
 }
 
 #mute.muted {
-    opacity: 0.5;
+    background: var(--color-btn-primary);
+    color: var(--color-text-inverted);
 }
 
 #fullscreen {
     background: var(--color-btn-secondary);
+    color: var(--color-text);
     padding-block: 0.75rem;
     padding-inline: 1rem;
     font-size: 1.25rem;
@@ -174,7 +201,8 @@ button:active {
 }
 
 #fullscreen:hover {
-    background: var(--color-btn-secondary-hover);
+    background: var(--color-btn-primary);
+    color: var(--color-text-inverted);
 }
 
 /* Fullscreen mode styles */
@@ -184,31 +212,33 @@ button:active {
 }
 
 :fullscreen .settings {
-    opacity: 0.3;
-    transition: opacity 0.3s;
+    display: none;
 }
 
 :fullscreen .settings:hover {
-    opacity: 1;
+    display: flex;
+}
+
+.settings {
+    margin-block-end: 2rem;
 }
 
 .settings fieldset {
-    border: none;
+    border: var(--border-width) solid var(--color-text);
     display: flex;
     gap: 2rem;
     justify-content: center;
+    padding: 1.5rem 2rem 1rem 2rem;
+    margin-inline: auto;
+    width: fit-content;
 }
 
-.sr-only {
-    position: absolute;
-    inline-size: 1px;
-    block-size: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
+.settings fieldset legend {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--color-text);
+    text-transform: uppercase;
+    padding-inline: 0.5rem;
 }
 
 .setting {
@@ -219,15 +249,19 @@ button:active {
 
 label {
     font-size: 0.9rem;
+    font-weight: 700;
     color: var(--color-text-muted);
+    text-transform: uppercase;
 }
 
 input[type="number"] {
     inline-size: 4.375rem;
     padding: 0.5rem;
     font-size: 1rem;
-    border: 2px solid var(--color-input-border);
-    border-radius: 0.375rem;
+    font-family: "Courier New", monospace;
+    font-weight: 700;
+    border: none;
+    border-bottom: var(--border-width) solid transparent;
     background: var(--color-input-bg);
     color: var(--color-text);
     text-align: center;
@@ -235,5 +269,5 @@ input[type="number"] {
 
 input[type="number"]:focus {
     outline: none;
-    border-color: var(--color-input-border-focus);
+    border-bottom-color: var(--color-text);
 }

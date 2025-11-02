@@ -7,8 +7,9 @@
  */
 export const elements = {
   arcProgress: document.querySelector(".arc-progress"),
+  arcBg: document.querySelector(".arc-bg"),
   progressPath: document.getElementById("progressPath"),
-  timeTextBase: document.getElementById("timeTextBase"),
+  timeText: document.getElementById("timeText"),
   timeTextInverted: document.getElementById("timeTextInverted"),
   startStopBtn: document.getElementById("startStop"),
   resetBtn: document.getElementById("reset"),
@@ -17,6 +18,7 @@ export const elements = {
   workTimeInput: document.getElementById("workTime"),
   restTimeInput: document.getElementById("restTime"),
   phaseCountDisplay: document.getElementById("phaseCount"),
+  phaseTextDisplay: document.getElementById("phaseText"),
 };
 
 /**
@@ -64,8 +66,7 @@ export function createArcPath(progress) {
  * Update the visual display (time text and progress arc)
  *
  * Updates both the countdown timer and the filled arc progress.
- * The time is shown in two overlapping layers - one normal and one inverted -
- * with the inverted version clipped to only show where the arc has filled.
+ * The inverted text layer uses CSS filter to automatically flip colors.
  *
  * @param {number} elapsed - Elapsed time in milliseconds since phase started
  * @param {number} totalTime - Total time for current phase in milliseconds
@@ -79,15 +80,15 @@ export function updateDisplay(elapsed, totalTime) {
   // Format as MM:SS with zero-padding
   const timeString = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 
-  // Update both text layers (base and inverted)
-  elements.timeTextBase.textContent = timeString;
+  // Update both text layers
+  elements.timeText.textContent = timeString;
   elements.timeTextInverted.textContent = timeString;
 
   // Calculate progress ratio (0 to 1) and generate arc path
   const progress = Math.min(elapsed / totalTime, 1);
   const pathData = createArcPath(progress);
 
-  // Update both the visible arc and the clip path for text inversion
+  // Update both the visible arc and the clip path
   elements.arcProgress.setAttribute("d", pathData);
   elements.progressPath.setAttribute("d", pathData);
 }
@@ -101,14 +102,22 @@ export function updatePhaseCount(count) {
 }
 
 /**
- * Set phase color (work = green, rest = red)
+ * Set phase color (work = black, rest = inverted)
  * @param {boolean} isWorkPhase - Whether in work phase
  */
 export function setPhaseColor(isWorkPhase) {
   if (isWorkPhase) {
     elements.arcProgress.classList.remove("rest");
+    elements.arcBg.classList.remove("rest");
+    elements.timeText.classList.remove("rest");
+    elements.timeTextInverted.classList.remove("rest");
+    elements.phaseTextDisplay.textContent = "Work";
   } else {
     elements.arcProgress.classList.add("rest");
+    elements.arcBg.classList.add("rest");
+    elements.timeText.classList.add("rest");
+    elements.timeTextInverted.classList.add("rest");
+    elements.phaseTextDisplay.textContent = "Rest";
   }
 }
 
@@ -121,11 +130,10 @@ export function setStartStopButton(isRunning) {
 }
 
 /**
- * Update mute button icon and style
+ * Update mute button style
  * @param {boolean} isMuted - Whether sound is muted
  */
 export function setMuteButton(isMuted) {
-  elements.muteBtn.textContent = isMuted ? "🔇" : "🔊";
   elements.muteBtn.classList.toggle("muted", isMuted);
 }
 
@@ -166,6 +174,6 @@ export function updateFullscreenButton() {
  * @param {number} count - Countdown number (3, 2, 1)
  */
 export function showCountdown(count) {
-  elements.timeTextBase.textContent = count.toString();
+  elements.timeText.textContent = count.toString();
   elements.timeTextInverted.textContent = count.toString();
 }
