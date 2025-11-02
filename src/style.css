@@ -238,9 +238,9 @@ button:hover {
 .settings fieldset {
     border: var(--border-width) solid var(--color-text);
     display: flex;
-    gap: 2rem;
+    gap: 1rem;
     justify-content: center;
-    padding: 0.8rem 2rem 1rem 2rem;
+    padding: 0.8rem 1rem 1rem 1rem;
     margin-inline: auto;
     width: fit-content;
 }
@@ -255,8 +255,8 @@ button:hover {
 
 .setting {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    align-items: baseline;
+    gap: 0.3rem;
 }
 
 label {
@@ -267,8 +267,8 @@ label {
 }
 
 input[type="number"] {
-    inline-size: 4.375rem;
-    padding: 0.5rem;
+    inline-size: 3rem;
+    padding: 0.5rem 0.2rem;
     font-size: 1rem;
     font-family: "Courier New", monospace;
     font-weight: 700;
@@ -276,7 +276,6 @@ input[type="number"] {
     border-bottom: var(--border-width) solid transparent;
     background: var(--color-input-bg);
     color: var(--color-text);
-    text-align: center;
 }
 
 input[type="number"]:focus {

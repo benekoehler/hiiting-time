@@ -53,7 +53,9 @@ const ENABLE_STATE_LOGGING = false;
 export const state = new Proxy(_state, {
   set(target, property, value) {
     if (ENABLE_STATE_LOGGING && target[property] !== value) {
-      console.log(`[State] ${String(property)}: ${target[property]} → ${value}`);
+      console.log(
+        `[State] ${String(property)}: ${target[property]} → ${value}`,
+      );
     }
     target[property] = value;
     return true;
