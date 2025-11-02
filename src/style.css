@@ -193,7 +193,7 @@ button:hover {
     line-height: 1;
 }
 
-#mute:hover {
+#mute:hover:not(.muted) {
     background: var(--color-btn-primary);
     color: var(--color-text-inverted);
 }
@@ -201,6 +201,11 @@ button:hover {
 #mute.muted {
     background: var(--color-btn-primary);
     color: var(--color-text-inverted);
+}
+
+#mute.muted:hover {
+    background: var(--color-btn-secondary);
+    color: var(--color-text);
 }
 
 #fullscreen {
