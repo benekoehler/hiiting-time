@@ -102,6 +102,9 @@ function handleWorkTimeChange(e) {
 
   state.workTime = value * 1000; // Convert seconds to milliseconds
 
+  // Save to localStorage
+  localStorage.setItem("workTime", value.toString());
+
   // Only update if in idle state and is work phase
   if (state.status === TimerStatus.IDLE && state.isWorkPhase) {
     state.totalTime = state.workTime;
@@ -124,6 +127,9 @@ function handleRestTimeChange(e) {
 
   state.restTime = value * 1000; // Convert seconds to milliseconds
 
+  // Save to localStorage
+  localStorage.setItem("restTime", value.toString());
+
   // Only update if in idle state and is rest phase
   if (state.status === TimerStatus.IDLE && !state.isWorkPhase) {
     state.totalTime = state.restTime;
@@ -136,6 +142,30 @@ function handleRestTimeChange(e) {
  */
 async function handleToggleFullscreen() {
   await ui.toggleFullscreen();
+}
+
+/**
+ * Load settings from localStorage
+ */
+function loadSettings() {
+  const savedWorkTime = localStorage.getItem("workTime");
+  const savedRestTime = localStorage.getItem("restTime");
+
+  if (savedWorkTime) {
+    const workTime = parseInt(savedWorkTime, 10);
+    if (!isNaN(workTime) && workTime > 0) {
+      state.workTime = workTime * 1000;
+      ui.elements.workTimeInput.value = workTime;
+    }
+  }
+
+  if (savedRestTime) {
+    const restTime = parseInt(savedRestTime, 10);
+    if (!isNaN(restTime) && restTime > 0) {
+      state.restTime = restTime * 1000;
+      ui.elements.restTimeInput.value = restTime;
+    }
+  }
 }
 
 /**
@@ -159,6 +189,7 @@ function initEventListeners() {
  * Initialize the app
  */
 function init() {
+  loadSettings();
   initEventListeners();
   handleReset();
 }
