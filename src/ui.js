@@ -45,12 +45,6 @@ export function createArcPath(progress) {
   // Empty path for 0% progress
   if (progress === 0) return "";
 
-  // Full circle for 100% progress - use simpler path
-  if (progress >= 0.9999) {
-    const startY = cy - r;
-    return `M ${cx},${cy} L ${cx},${startY} A ${r},${r} 0 1,1 ${cx},${startY + 0.01} Z`;
-  }
-
   // Calculate end point on circle (starting from top, going clockwise)
   // Subtract π/2 to start from top instead of right
   const angle = progress * 2 * Math.PI;
@@ -79,7 +73,10 @@ export function updateDisplay(elapsed, totalTime) {
   const safeTotalTime = totalTime > 0 ? totalTime : 1;
 
   // Calculate remaining time in seconds (rounded up, min 0)
-  const remaining = Math.max(0, Math.ceil((safeTotalTime - safeElapsed) / 1000));
+  const remaining = Math.max(
+    0,
+    Math.ceil((safeTotalTime - safeElapsed) / 1000),
+  );
   const minutes = Math.floor(remaining / 60);
   const seconds = remaining % 60;
 
@@ -133,11 +130,11 @@ export function setStartStopButton(isRunning) {
 }
 
 /**
- * Update mute button style
+ * Update mute checkbox state
  * @param {boolean} isMuted - Whether sound is muted
  */
 export function setMuteButton(isMuted) {
-  elements.muteBtn.classList.toggle("muted", isMuted);
+  elements.muteBtn.checked = isMuted;
 }
 
 /**
@@ -161,10 +158,11 @@ export async function toggleFullscreen() {
 }
 
 /**
- * Update fullscreen button icon based on fullscreen state
+ * Update fullscreen checkbox state based on fullscreen state
  */
 export function updateFullscreenButton() {
   const isFullscreen = !!document.fullscreenElement;
+  elements.fullscreenBtn.checked = isFullscreen;
   elements.fullscreenBtn.setAttribute(
     "aria-label",
     isFullscreen ? "Exit fullscreen" : "Enter fullscreen",

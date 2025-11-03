@@ -10,16 +10,24 @@
     <body>
         <main id="appContainer">
             <section class="secondary-controls">
-                <button id="mute" type="button" aria-label="Toggle sound">
-                    M
-                </button>
-                <button
-                    id="fullscreen"
-                    type="button"
-                    aria-label="Toggle fullscreen"
-                >
-                    F
-                </button>
+                <label class="switch-label">
+                    <input
+                        type="checkbox"
+                        id="mute"
+                        role="switch"
+                        aria-label="Toggle sound"
+                    />
+                    <span class="switch-text">M</span>
+                </label>
+                <label class="switch-label" id="fullscreenLabel">
+                    <input
+                        type="checkbox"
+                        id="fullscreen"
+                        role="switch"
+                        aria-label="Toggle fullscreen"
+                    />
+                    <span class="switch-text">F</span>
+                </label>
             </section>
 
             <section class="phase-indicator" aria-label="Current phase">

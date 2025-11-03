@@ -184,42 +184,53 @@ button:hover {
     color: var(--color-text-inverted);
 }
 
-#mute {
+.switch-label {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.switch-label input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.switch-text {
+    display: inline-block;
     background: var(--color-btn-secondary);
     color: var(--color-text);
     padding-block: 0.75rem;
     padding-inline: 1rem;
     font-size: 1rem;
+    font-weight: 700;
+    font-family: "Courier New", monospace;
     line-height: 1;
+    border: var(--border-width) solid var(--color-text);
+    text-transform: uppercase;
+    transition: background 0.2s, color 0.2s;
 }
 
-#mute:hover:not(.muted) {
+.switch-label:hover .switch-text {
     background: var(--color-btn-primary);
     color: var(--color-text-inverted);
 }
 
-#mute.muted {
+.switch-label input[type="checkbox"]:checked + .switch-text {
     background: var(--color-btn-primary);
     color: var(--color-text-inverted);
 }
 
-#mute.muted:hover {
+.switch-label input[type="checkbox"]:checked:hover + .switch-text {
     background: var(--color-btn-secondary);
     color: var(--color-text);
 }
 
-#fullscreen {
-    background: var(--color-btn-secondary);
-    color: var(--color-text);
-    padding-block: 0.75rem;
-    padding-inline: 1rem;
-    font-size: 1rem;
-    line-height: 1;
-}
-
-#fullscreen:hover {
-    background: var(--color-btn-primary);
-    color: var(--color-text-inverted);
+/* Hide fullscreen button on mobile/touch devices */
+@media (max-width: 768px) {
+    #fullscreenLabel {
+        display: none;
+    }
 }
 
 /* Fullscreen mode styles */
@@ -264,7 +275,7 @@ button:hover {
     gap: 0.3rem;
 }
 
-label {
+.setting label {
     font-size: 1rem;
     font-weight: 700;
     color: var(--color-text-muted);

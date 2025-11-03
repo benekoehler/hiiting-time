@@ -144,8 +144,8 @@ async function handleToggleFullscreen() {
 function initEventListeners() {
   ui.elements.startStopBtn.addEventListener("click", handleToggleTimer);
   ui.elements.resetBtn.addEventListener("click", handleReset);
-  ui.elements.muteBtn.addEventListener("click", handleToggleMute);
-  ui.elements.fullscreenBtn.addEventListener("click", handleToggleFullscreen);
+  ui.elements.muteBtn.addEventListener("change", handleToggleMute);
+  ui.elements.fullscreenBtn.addEventListener("change", handleToggleFullscreen);
   ui.elements.workTimeInput.addEventListener("change", handleWorkTimeChange);
   ui.elements.restTimeInput.addEventListener("change", handleRestTimeChange);
 
