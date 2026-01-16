@@ -122,6 +122,17 @@ function handleTimeChange(e, { stateKey, storageKey, isActivePhase }) {
 }
 
 /**
+ * Handle work time input change
+ */
+function handleWorkTimeChange(e) {
+  handleTimeChange(e, {
+    stateKey: "workTime",
+    storageKey: "workTime",
+    isActivePhase: state.isWorkPhase,
+  });
+}
+
+/**
  * Handle rest time input change
  */
 function handleRestTimeChange(e) {
