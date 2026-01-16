@@ -3,6 +3,8 @@
  * Prevents screen from sleeping while timer is running
  */
 
+import { state, TimerStatus } from "./state.js";
+
 let wakeLock = null;
 
 /**
@@ -58,10 +60,13 @@ export function isWakeLockActive() {
 
 /**
  * Re-acquire wake lock when page becomes visible again
- * Useful when user switches tabs and comes back
+ * Only re-acquires if the timer is currently running
  */
 async function handleVisibilityChange() {
-  if (document.visibilityState === "visible" && wakeLock !== null && wakeLock.released) {
+  const isTimerRunning = state.status === TimerStatus.RUNNING;
+  const wasReleased = wakeLock !== null && wakeLock.released;
+
+  if (document.visibilityState === "visible" && isTimerRunning && wasReleased) {
     await requestWakeLock();
   }
 }
