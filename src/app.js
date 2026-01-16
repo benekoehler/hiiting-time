@@ -92,26 +92,31 @@ function handleToggleMute() {
 }
 
 /**
- * Handle work time input change
+ * Handle time input change for work or rest duration
+ * @param {Event} e - Input change event
+ * @param {Object} options - Configuration for which time to update
+ * @param {string} options.stateKey - Key in state object ('workTime' or 'restTime')
+ * @param {string} options.storageKey - Key for localStorage
+ * @param {boolean} options.isActivePhase - Whether this phase is currently active
  */
-function handleWorkTimeChange(e) {
+function handleTimeChange(e, { stateKey, storageKey, isActivePhase }) {
   const value = parseInt(e.target.value, 10);
 
   // Validate input - reject NaN and negative values
   if (isNaN(value) || value <= 0) {
     // Reset input to current valid value
-    e.target.value = Math.floor(state.workTime / 1000);
+    e.target.value = Math.floor(state[stateKey] / 1000);
     return;
   }
 
-  state.workTime = value * 1000; // Convert seconds to milliseconds
+  state[stateKey] = value * 1000; // Convert seconds to milliseconds
 
   // Save to localStorage
-  localStorage.setItem("workTime", value.toString());
+  localStorage.setItem(storageKey, value.toString());
 
-  // Only update if in idle state and is work phase
-  if (state.status === TimerStatus.IDLE && state.isWorkPhase) {
-    state.totalTime = state.workTime;
+  // Only update display if in idle state and this phase is active
+  if (state.status === TimerStatus.IDLE && isActivePhase) {
+    state.totalTime = state[stateKey];
     ui.updateDisplay(0, state.totalTime);
   }
 }
@@ -120,25 +125,11 @@ function handleWorkTimeChange(e) {
  * Handle rest time input change
  */
 function handleRestTimeChange(e) {
-  const value = parseInt(e.target.value, 10);
-
-  // Validate input - reject NaN and negative values
-  if (isNaN(value) || value <= 0) {
-    // Reset input to current valid value
-    e.target.value = Math.floor(state.restTime / 1000);
-    return;
-  }
-
-  state.restTime = value * 1000; // Convert seconds to milliseconds
-
-  // Save to localStorage
-  localStorage.setItem("restTime", value.toString());
-
-  // Only update if in idle state and is rest phase
-  if (state.status === TimerStatus.IDLE && !state.isWorkPhase) {
-    state.totalTime = state.restTime;
-    ui.updateDisplay(0, state.totalTime);
-  }
+  handleTimeChange(e, {
+    stateKey: "restTime",
+    storageKey: "restTime",
+    isActivePhase: !state.isWorkPhase,
+  });
 }
 
 /**
@@ -172,7 +163,6 @@ function initEventListeners() {
   ui.elements.startStopBtn.addEventListener("click", handleToggleTimer);
   ui.elements.resetBtn.addEventListener("click", handleReset);
   ui.elements.muteBtn.addEventListener("change", handleToggleMute);
-  ui.elements.workTimeInput.addEventListener("change", handleWorkTimeChange);
   ui.elements.restTimeInput.addEventListener("change", handleRestTimeChange);
 }
 
