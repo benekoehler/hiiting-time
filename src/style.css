@@ -6,16 +6,21 @@
     --color-work: #000000;
     --color-rest: #ffffff;
     --color-text-inverted: #ffffff;
-    --color-btn-primary: #000000;
-    --color-btn-primary-hover: #000000;
-    --color-btn-secondary: #ffffff;
-    --color-btn-secondary-hover: #ffffff;
+    --color-btn-primary: transparent;
+    --color-btn-primary-hover: #f9a8d4;
+    --color-btn-primary-active: #f472b6;
     --color-input-bg: #ffffff;
     --color-input-border: #000000;
     --color-input-border-focus: #000000;
+    --color-toggle-checked: #9ca3af;
+    --color-toggle-bg: #f9a8d4;
+    --toggle-width: 4rem;
+    --toggle-height: 2.5rem;
     --border-width: 4px;
     --border-width-active: 6px;
     --border-radius: 2px;
+
+    --shadow-neo: 4px 4px 0px rgba(0, 0, 0, 1);
 }
 
 * {
@@ -152,75 +157,93 @@ main.rest .time-text-inverted {
 button {
     padding-block: 0.75rem;
     padding-inline: 2rem;
+    height: 3rem;
     font-size: 1rem;
     font-weight: 700;
     font-family: "Courier New", monospace;
     border: var(--border-width) solid var(--color-text);
     border-radius: var(--border-radius);
     background: var(--color-btn-primary);
-    color: var(--color-text-inverted);
+    color: var(--color-text);
     cursor: pointer;
     text-transform: uppercase;
+    transition: all 0.2s;
 }
 
 button:hover {
-    background: var(--color-btn-secondary);
-    color: var(--color-text);
+    background: var(--color-btn-primary-hover);
+    box-shadow: var(--shadow-neo);
 }
 
-#reset {
-    background: var(--color-btn-secondary);
-    color: var(--color-text);
+button:active {
+    background: var(--color-btn-primary-active);
 }
 
-#reset:hover {
-    background: var(--color-btn-primary);
-    color: var(--color-text-inverted);
+button:focus {
+    outline: var(--border-width) solid var(--color-btn-primary-hover);
+    outline-offset: 2px;
 }
 
-.switch-label {
-    display: inline-block;
+.toggle-label {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    margin-block-end: 1.25rem;
     cursor: pointer;
 }
 
-.switch-label input[type="checkbox"] {
+.toggle-input {
     position: absolute;
     opacity: 0;
     width: 0;
     height: 0;
 }
 
-.switch-text {
-    display: inline-block;
-    background: var(--color-btn-secondary);
-    color: var(--color-text);
-    padding-block: 0.75rem;
-    padding-inline: 1rem;
-    font-size: 1rem;
-    font-weight: 700;
-    font-family: "Courier New", monospace;
-    line-height: 1;
+.toggle-switch {
+    position: relative;
+    width: var(--toggle-width);
+    height: var(--toggle-height);
+    background: var(--color-toggle-bg);
+    border-radius: 9999px;
     border: var(--border-width) solid var(--color-text);
-    border-radius: var(--border-radius);
-    text-transform: uppercase;
-    transition:
-        background 0.2s,
-        color 0.2s;
+    transition: all 0.3s;
 }
 
-.switch-label:hover .switch-text {
-    background: var(--color-btn-primary);
-    color: var(--color-text-inverted);
+.toggle-switch::after {
+    content: "";
+    position: absolute;
+    top: calc(var(--border-width) / 2);
+    left: calc(var(--border-width) / 2);
+    width: calc(var(--toggle-height) - 5 * var(--border-width));
+    height: calc(var(--toggle-height) - 5 * var(--border-width));
+    background: white;
+    border-radius: 9999px;
+    border: var(--border-width) solid var(--color-text);
+    transition: all 0.3s;
 }
 
-.switch-label input[type="checkbox"]:checked + .switch-text {
-    background: var(--color-btn-primary);
-    color: var(--color-text-inverted);
+.toggle-input:focus + .toggle-switch {
+    outline: var(--border-width) solid var(--color-btn-primary-hover);
+    outline-offset: 2px;
 }
 
-.switch-label input[type="checkbox"]:checked:hover + .switch-text {
-    background: var(--color-btn-secondary);
-    color: var(--color-text);
+.toggle-input:checked + .toggle-switch {
+    background: var(--color-toggle-checked);
+    box-shadow: var(--shadow-neo);
+}
+
+.toggle-input:checked + .toggle-switch::after {
+    transform: translateX(calc(var(--toggle-width) - var(--toggle-height)));
+}
+
+.toggle-text {
+    margin-inline-start: 0.75rem;
+    font-weight: 900;
+}
+
+.toggle-input:checked ~ .toggle-text {
+    text-decoration: line-through;
+    text-decoration-thickness: calc(var(--border-width) / 2);
 }
 
 .settings {
@@ -266,13 +289,12 @@ input[type="number"] {
     font-family: "Courier New", monospace;
     font-weight: 700;
     border: none;
-    border-bottom: var(--border-width) solid transparent;
-    border-radius: 1px;
+    border-radius: var(--border-radius);
     background: var(--color-input-bg);
     color: var(--color-text);
 }
 
 input[type="number"]:focus {
-    outline: none;
-    border-bottom-color: var(--color-text);
+    outline: var(--border-width) solid var(--color-btn-primary-hover);
+    outline-offset: 2px;
 }
