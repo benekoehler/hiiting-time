@@ -33,7 +33,6 @@ async function handleToggleTimer() {
     timer.pause();
     state.pausedTime = timer.getElapsed();
     ui.setStartStopButton(false);
-    ui.setTimerRunning(false);
     // Release wake lock when pausing
     await wakeLock.releaseWakeLock();
   } else if (state.status === TimerStatus.COUNTDOWN) {
@@ -65,7 +64,6 @@ async function handleToggleTimer() {
     // Start or resume timer
     timer.start();
     ui.setStartStopButton(true);
-    ui.setTimerRunning(true);
     timer.startAnimationLoop(ui.updateDisplay, handlePhaseSwitch);
     // Request wake lock to prevent screen sleep
     await wakeLock.requestWakeLock();
@@ -80,7 +78,6 @@ async function handleReset() {
   ui.setPhaseColor(state.isWorkPhase);
   ui.updatePhaseCount(state.phaseCount);
   ui.setStartStopButton(false);
-  ui.setTimerRunning(false);
   ui.updateDisplay(0, state.totalTime);
   // Release wake lock when resetting
   await wakeLock.releaseWakeLock();

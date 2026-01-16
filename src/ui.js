@@ -110,14 +110,6 @@ export function setPhaseColor(isWorkPhase) {
 }
 
 /**
- * Set timer running state for UI (shows/hides inverted text layer)
- * @param {boolean} isRunning - Whether timer is actively running
- */
-export function setTimerRunning(isRunning) {
-  elements.appContainer.classList.toggle("timer-running", isRunning);
-}
-
-/**
  * Update start/stop button text
  * @param {boolean} isRunning - Whether timer is running
  */
