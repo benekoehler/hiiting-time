@@ -31,7 +31,7 @@ export const TimerStatus = {
  */
 const _state = {
   workTime: 30000, // 30 seconds in milliseconds
-  restTime: 10000, // 10 seconds in milliseconds
+  restTime: 15000, // 15 seconds in milliseconds
   startTime: 0,
   pausedTime: 0,
   totalTime: 30000, // 30 seconds in milliseconds
@@ -53,9 +53,7 @@ const ENABLE_STATE_LOGGING = false;
 export const state = new Proxy(_state, {
   set(target, property, value) {
     if (ENABLE_STATE_LOGGING && target[property] !== value) {
-      console.log(
-        `[State] ${String(property)}: ${target[property]} → ${value}`,
-      );
+      console.log(`[State] ${String(property)}: ${target[property]} → ${value}`);
     }
     target[property] = value;
     return true;

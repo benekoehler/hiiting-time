@@ -15,7 +15,6 @@ export const elements = {
   startStopBtn: document.getElementById("startStop"),
   resetBtn: document.getElementById("reset"),
   muteBtn: document.getElementById("mute"),
-  fullscreenBtn: document.getElementById("fullscreen"),
   workTimeInput: document.getElementById("workTime"),
   restTimeInput: document.getElementById("restTime"),
   phaseCountDisplay: document.getElementById("phaseCount"),
@@ -73,10 +72,7 @@ export function updateDisplay(elapsed, totalTime) {
   const safeTotalTime = totalTime > 0 ? totalTime : 1;
 
   // Calculate remaining time in seconds (rounded up, min 0)
-  const remaining = Math.max(
-    0,
-    Math.ceil((safeTotalTime - safeElapsed) / 1000),
-  );
+  const remaining = Math.max(0, Math.ceil((safeTotalTime - safeElapsed) / 1000));
   const minutes = Math.floor(remaining / 60);
   const seconds = remaining % 60;
 
@@ -135,38 +131,6 @@ export function setStartStopButton(isRunning) {
  */
 export function setMuteButton(isMuted) {
   elements.muteBtn.checked = isMuted;
-}
-
-/**
- * Toggle fullscreen mode
- * Uses the Fullscreen API to enter/exit fullscreen
- */
-export async function toggleFullscreen() {
-  if (!document.fullscreenElement) {
-    try {
-      await document.documentElement.requestFullscreen();
-    } catch (err) {
-      console.error("Error entering fullscreen:", err);
-    }
-  } else {
-    try {
-      await document.exitFullscreen();
-    } catch (err) {
-      console.error("Error exiting fullscreen:", err);
-    }
-  }
-}
-
-/**
- * Update fullscreen checkbox state based on fullscreen state
- */
-export function updateFullscreenButton() {
-  const isFullscreen = !!document.fullscreenElement;
-  elements.fullscreenBtn.checked = isFullscreen;
-  elements.fullscreenBtn.setAttribute(
-    "aria-label",
-    isFullscreen ? "Exit fullscreen" : "Enter fullscreen",
-  );
 }
 
 /**

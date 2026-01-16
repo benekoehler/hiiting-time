@@ -15,6 +15,7 @@
     --color-input-border-focus: #000000;
     --border-width: 4px;
     --border-width-active: 6px;
+    --border-radius: 2px;
 }
 
 * {
@@ -163,6 +164,7 @@ button {
     font-weight: 700;
     font-family: "Courier New", monospace;
     border: var(--border-width) solid var(--color-text);
+    border-radius: var(--border-radius);
     background: var(--color-btn-primary);
     color: var(--color-text-inverted);
     cursor: pointer;
@@ -207,8 +209,11 @@ button:hover {
     font-family: "Courier New", monospace;
     line-height: 1;
     border: var(--border-width) solid var(--color-text);
+    border-radius: var(--border-radius);
     text-transform: uppercase;
-    transition: background 0.2s, color 0.2s;
+    transition:
+        background 0.2s,
+        color 0.2s;
 }
 
 .switch-label:hover .switch-text {
@@ -226,33 +231,13 @@ button:hover {
     color: var(--color-text);
 }
 
-/* Hide fullscreen button on mobile/touch devices */
-@media (max-width: 768px) {
-    #fullscreenLabel {
-        display: none;
-    }
-}
-
-/* Fullscreen mode styles */
-:fullscreen main,
-::backdrop {
-    background: var(--color-bg);
-}
-
-:fullscreen .settings {
-    display: none;
-}
-
-:fullscreen .settings:hover {
-    display: flex;
-}
-
 .settings {
     margin-block-end: 2rem;
 }
 
 .settings fieldset {
     border: var(--border-width) solid var(--color-text);
+    border-radius: var(--border-radius);
     display: flex;
     gap: 1rem;
     justify-content: center;
@@ -290,6 +275,7 @@ input[type="number"] {
     font-weight: 700;
     border: none;
     border-bottom: var(--border-width) solid transparent;
+    border-radius: 1px;
     background: var(--color-input-bg);
     color: var(--color-text);
 }
