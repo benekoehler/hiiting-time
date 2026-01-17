@@ -45,16 +45,31 @@ async function handleToggleTimer() {
     const isStartingFresh = state.pausedTime === 0;
 
     if (isStartingFresh) {
-      // Run countdown before starting
-      const completed = await timer.countdown((count) => {
-        // On each countdown tick
-        ui.showCountdown(count);
-        audio.playCountdownBeep(count);
-        vibration.vibrateCountdown(count);
+      // Run intro animation before starting
+      state.status = TimerStatus.COUNTDOWN;
+      ui.startIntroAnimation(state.totalTime);
+
+      // Wait for animation to complete
+      const animationCompleted = await new Promise((resolve) => {
+        // Listen for animationend on the last character (5th tspan)
+        const handleAnimationEnd = (e) => {
+          // Check if this is from a tspan element and if countdown wasn't cancelled
+          if (e.target.tagName.toLowerCase() === 'tspan') {
+            ui.elements.timeText.removeEventListener('animationend', handleAnimationEnd);
+            ui.elements.timeTextInverted.removeEventListener('animationend', handleAnimationEnd);
+            resolve(state.status === TimerStatus.COUNTDOWN);
+          }
+        };
+
+        ui.elements.timeText.addEventListener('animationend', handleAnimationEnd);
+        ui.elements.timeTextInverted.addEventListener('animationend', handleAnimationEnd);
       });
 
+      // Clean up animation classes
+      ui.clearCountdownAnimation();
+
       // If countdown was cancelled, don't start
-      if (!completed) {
+      if (!animationCompleted) {
         ui.setStartStopButton(false);
         ui.updateDisplay(0, state.totalTime);
         return;

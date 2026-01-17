@@ -1,3 +1,10 @@
+@font-face {
+    font-family: "Recursive";
+    src: url("./fonts/Recursive_VF_1.085.ttf") format("truetype");
+    font-weight: 300 1000;
+    font-display: swap;
+}
+
 :root {
     --color-bg: #ffffff;
     --color-text: #000000;
@@ -30,7 +37,10 @@
 }
 
 body {
-    font-family: "Courier New", monospace;
+    font-family: "Recursive", "Courier New", monospace;
+    font-variation-settings:
+        "MONO" 1,
+        "CASL" 0.8;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -89,8 +99,12 @@ main.rest .arc-progress {
     fill: var(--color-text);
     font-size: 3rem;
     font-weight: 700;
-    font-family: "Courier New", monospace;
+    font-family: "Recursive", "Courier New", monospace;
     font-variant-numeric: tabular-nums;
+    font-variation-settings:
+        "MONO" 1,
+        "CASL" 0.8,
+        "wght" 700;
 }
 
 /* Inverted text: clipped by progress arc, shows opposite color */
@@ -98,8 +112,12 @@ main.rest .arc-progress {
     fill: var(--color-text);
     font-size: 3rem;
     font-weight: 700;
-    font-family: "Courier New", monospace;
+    font-family: "Recursive", "Courier New", monospace;
     font-variant-numeric: tabular-nums;
+    font-variation-settings:
+        "MONO" 1,
+        "CASL" 0.8,
+        "wght" 700;
     filter: url(#invertFilter);
 }
 
@@ -160,7 +178,10 @@ button {
     height: 3rem;
     font-size: 1rem;
     font-weight: 700;
-    font-family: "Courier New", monospace;
+    font-family: "Recursive", "Courier New", monospace;
+    font-variation-settings:
+        "MONO" 1,
+        "CASL" 0.8;
     border: var(--border-width) solid var(--color-text);
     border-radius: var(--border-radius);
     background: var(--color-btn-primary);
@@ -286,8 +307,11 @@ input[type="number"] {
     inline-size: 3rem;
     padding: 0.5rem 0.2rem;
     font-size: 1rem;
-    font-family: "Courier New", monospace;
+    font-family: "Recursive", "Courier New", monospace;
     font-weight: 700;
+    font-variation-settings:
+        "MONO" 1,
+        "CASL" 0.8;
     border: none;
     border-radius: var(--border-radius);
     background: var(--color-input-bg);
@@ -297,4 +321,51 @@ input[type="number"] {
 input[type="number"]:focus {
     outline: var(--border-width) solid var(--color-btn-primary-hover);
     outline-offset: 2px;
+}
+
+/* Intro nanimation keyframes - based on animation.html */
+@keyframes loop {
+    0%,
+    100% {
+        font-variation-settings:
+            "MONO" 1,
+            "CASL" 0.8,
+            "wght" 700;
+    }
+
+    33% {
+        font-variation-settings:
+            "MONO" 1,
+            "CASL" 0.8,
+            "wght" 300;
+    }
+    66% {
+        font-variation-settings:
+            "MONO" 1,
+            "CASL" 0.8,
+            "wght" 1000;
+    }
+}
+
+/* Apply animation to tspan children */
+.intro-animation tspan {
+    animation: loop 2s ease-in-out;
+    animation-iteration-count: 1;
+}
+
+/* Staggered delays for each character (5 characters: MM:SS) */
+.intro-animation tspan:nth-child(1) {
+    animation-delay: 0ms;
+}
+.intro-animation tspan:nth-child(2) {
+    animation-delay: 100ms;
+}
+.intro-animation tspan:nth-child(3) {
+    animation-delay: 200ms;
+}
+.intro-animation tspan:nth-child(4) {
+    animation-delay: 300ms;
+}
+.intro-animation tspan:nth-child(5) {
+    animation-delay: 400ms;
 }
