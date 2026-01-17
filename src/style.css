@@ -61,7 +61,6 @@ main {
     letter-spacing: 0.2rem;
     font-weight: 1000;
     text-transform: uppercase;
-    margin-block-end: 1rem;
     color: var(--color-text);
 }
 
@@ -101,7 +100,7 @@ main.rest .arc-progress {
     font-size: 3rem;
     font-weight: 700;
     font-family: "Recursive", "Courier New", monospace;
-    font-variant-numeric: tabular-nums;
+    /*font-variant-numeric: tabular-nums;*/
     font-variation-settings:
         "MONO" 1,
         "CASL" 0.8,
@@ -176,7 +175,7 @@ main.rest .time-text-inverted {
     gap: 1rem;
     justify-content: space-between;
     margin-block-start: 0.5rem;
-    margin-block-end: 2rem;
+    margin-block-end: 1rem;
     width: 100%;
 }
 
@@ -217,7 +216,6 @@ button:focus {
     position: relative;
     display: inline-flex;
     align-items: center;
-    margin-block-end: 1.25rem;
     cursor: pointer;
 }
 
