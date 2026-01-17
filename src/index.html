@@ -28,17 +28,11 @@
                             <path id="progressPath" d=""></path>
                         </clipPath>
                         <filter id="invertFilter">
-                            <feColorMatrix
-                                type="matrix"
-                                values="-1 0 0 0 1
-                                                                   0 -1 0 0 1
-                                                                   0 0 -1 0 1
-                                                                   0 0 0 1 0"
-                            />
+                            <feColorMatrix type="matrix" values="-1 0 0 0 1 0 -1 0 0 1 0 0 -1 0 1 0 0 0 1 0" />
                         </filter>
                     </defs>
                     <circle class="arc-bg" cx="100" cy="100" r="90"></circle>
-                    <path class="arc-progress" d=""></path>
+                    <path class="arc-progress" d="M 100,100 L 100,10 A 90,90 0 0,1 100.0001,10.0 Z"></path>
                     <text
                         class="time-text"
                         x="100"

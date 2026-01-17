@@ -57,8 +57,9 @@ main {
 }
 
 .phase-indicator {
-    font-size: 1rem;
-    font-weight: 700;
+    font-size: 3rem;
+    letter-spacing: 0.2rem;
+    font-weight: 1000;
     text-transform: uppercase;
     margin-block-end: 1rem;
     color: var(--color-text);
@@ -94,7 +95,7 @@ main.rest .arc-progress {
     fill: var(--color-rest);
 }
 
-/* Text styles */
+/* Text styles - top layer with clip-path */
 .time-text {
     fill: var(--color-text);
     font-size: 3rem;
@@ -105,9 +106,12 @@ main.rest .arc-progress {
         "MONO" 1,
         "CASL" 0.8,
         "wght" 700;
+    /* Safari optimization: smooth rendering */
+    will-change: transform;
+    transform: translateZ(0);
 }
 
-/* Inverted text: clipped by progress arc, shows opposite color */
+/* Inverted text - bottom layer with color filter */
 .time-text-inverted {
     fill: var(--color-text);
     font-size: 3rem;
@@ -119,9 +123,12 @@ main.rest .arc-progress {
         "CASL" 0.8,
         "wght" 700;
     filter: url(#invertFilter);
+    /* Safari optimization: smooth rendering */
+    will-change: transform;
+    transform: translateZ(0);
 }
 
-/* Rest phase: invert the base text, remove filter from clipped text */
+/* Rest phase: swap filters */
 main.rest .time-text {
     filter: url(#invertFilter);
 }
@@ -168,7 +175,8 @@ main.rest .time-text-inverted {
     display: flex;
     gap: 1rem;
     justify-content: space-between;
-    margin-block: 2rem;
+    margin-block-start: 0.5rem;
+    margin-block-end: 2rem;
     width: 100%;
 }
 
@@ -259,7 +267,8 @@ button:focus {
 
 .toggle-text {
     margin-inline-start: 0.75rem;
-    font-weight: 900;
+    font-weight: 700;
+    text-transform: uppercase;
 }
 
 .toggle-input:checked ~ .toggle-text {
@@ -349,8 +358,12 @@ input[type="number"]:focus {
 
 /* Apply animation to tspan children */
 .intro-animation tspan {
-    animation: loop 2s ease-in-out;
+    animation: loop 3s ease-in-out;
     animation-iteration-count: 1;
+    /* Prevent layout shift during animation */
+    will-change: font-variation-settings;
+    transform: translateZ(0);
+    -webkit-font-smoothing: antialiased;
 }
 
 /* Staggered delays for each character (5 characters: MM:SS) */

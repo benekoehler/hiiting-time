@@ -54,15 +54,15 @@ async function handleToggleTimer() {
         // Listen for animationend on the last character (5th tspan)
         const handleAnimationEnd = (e) => {
           // Check if this is from a tspan element and if countdown wasn't cancelled
-          if (e.target.tagName.toLowerCase() === 'tspan') {
-            ui.elements.timeText.removeEventListener('animationend', handleAnimationEnd);
-            ui.elements.timeTextInverted.removeEventListener('animationend', handleAnimationEnd);
+          if (e.target.tagName.toLowerCase() === "tspan") {
+            ui.elements.timeText.removeEventListener("animationend", handleAnimationEnd);
+            ui.elements.timeTextInverted.removeEventListener("animationend", handleAnimationEnd);
             resolve(state.status === TimerStatus.COUNTDOWN);
           }
         };
 
-        ui.elements.timeText.addEventListener('animationend', handleAnimationEnd);
-        ui.elements.timeTextInverted.addEventListener('animationend', handleAnimationEnd);
+        ui.elements.timeText.addEventListener("animationend", handleAnimationEnd);
+        ui.elements.timeTextInverted.addEventListener("animationend", handleAnimationEnd);
       });
 
       // Clean up animation classes
@@ -189,6 +189,7 @@ function initEventListeners() {
   ui.elements.startStopBtn.addEventListener("click", handleToggleTimer);
   ui.elements.resetBtn.addEventListener("click", handleReset);
   ui.elements.muteBtn.addEventListener("change", handleToggleMute);
+  ui.elements.workTimeInput.addEventListener("change", handleWorkTimeChange);
   ui.elements.restTimeInput.addEventListener("change", handleRestTimeChange);
 }
 
