@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Timer</title>
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <style>
+            :root {
+                --casl: 0.9;
+            }
+            h1 {
+                font-size: 5rem;
+                font-variation-settings:
+                    "MONO" 1,
+                    "CASL" var(--casl),
+                    "wght" 700,
+                    "slnt" -10,
+                    "CRSV" 1;
+
+                span {
+                    animation: loop 5s ease-in-out;
+                    /*animation-fill-mode: forwards;*/
+                    animation-iteration-count: 1;
+                }
+
+                span:nth-child(1) {
+                    animation-delay: 0ms;
+                }
+                span:nth-child(2) {
+                    animation-delay: 100ms;
+                }
+                span:nth-child(3) {
+                    animation-delay: 200ms;
+                }
+                span:nth-child(4) {
+                    animation-delay: 300ms;
+                }
+                span:nth-child(5) {
+                    animation-delay: 400ms;
+                }
+            }
+
+            @keyframes loop {
+                0%,
+                100% {
+                    font-variation-settings:
+                        "MONO" 1,
+                        "CASL" var(--casl),
+                        "slnt" -10,
+                        "wght" 700;
+                }
+                10%,
+                30%,
+                50%,
+                70%,
+                90% {
+                    font-variation-settings:
+                        "MONO" 0,
+                        "CASL" var(--casl),
+                        "slnt" -10,
+                        "wght" 300;
+                }
+                20%,
+                40%,
+                60%,
+                80% {
+                    font-variation-settings:
+                        "MONO" 1,
+                        "CASL" var(--casl),
+                        "slnt" -10,
+                        "wght" 1000;
+                }
+            }
+        </style>
+
+        <h1><span>3</span><span>0</span><span>:</span><span>0</span><span>0</span></h1>
+    </body>
+</html>
